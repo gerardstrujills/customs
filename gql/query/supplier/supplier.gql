@@ -1,0 +1,30 @@
+query Supplier($supplierId: Int!) {
+  supplier(id: $supplierId) {
+    id
+    name
+    ruc
+    district
+    province
+    department
+    productCount
+    createdAt
+    updatedAt
+    entry {
+      id
+      product {
+        id
+        title
+        description
+        unitOfMeasurement
+        materialType
+        createdAt
+        updatedAt
+      }
+      quantity
+      price
+      startTime
+      createdAt
+      updatedAt
+    }
+  }
+}

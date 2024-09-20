@@ -1,0 +1,27 @@
+mutation CreateEntry($input: EntryInput!) {
+  createEntry(input: $input) {
+    entry {
+      id
+      quantity
+      price
+      startTime
+      createdAt
+      updatedAt
+      supplier {
+        id
+        name
+        ruc
+        district
+        province
+        department
+        productCount
+        createdAt
+        updatedAt
+      }
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

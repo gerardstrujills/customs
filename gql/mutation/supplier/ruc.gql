@@ -1,0 +1,11 @@
+mutation CreateSupplierRuc($input: SupplierRuc!) {
+  createSupplierRuc(input: $input) {
+    supplier {
+      id
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

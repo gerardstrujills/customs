@@ -1,0 +1,16 @@
+mutation CreateWithdrawal($input: WithdrawalInput!) {
+  createWithdrawal(input: $input) {
+    withdrawal {
+      id
+      title
+      quantity
+      endTime
+      createdAt
+      updatedAt
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

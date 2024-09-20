@@ -1,0 +1,19 @@
+mutation UpdateWithdrawal(
+  $input: WithdrawalUpdateInput!
+  $updateWithdrawalId: Int!
+) {
+  updateWithdrawal(input: $input, id: $updateWithdrawalId) {
+    withdrawal {
+      id
+      title
+      quantity
+      endTime
+      createdAt
+      updatedAt
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

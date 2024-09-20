@@ -1,0 +1,3 @@
+mutation DeleteEntry($deleteEntryId: Int!) {
+  deleteEntry(id: $deleteEntryId)
+}

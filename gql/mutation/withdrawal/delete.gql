@@ -1,0 +1,3 @@
+mutation DeleteWithdrawal($deleteWithdrawalId: Int!) {
+  deleteWithdrawal(id: $deleteWithdrawalId)
+}

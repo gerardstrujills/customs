@@ -1,0 +1,17 @@
+mutation CreateProduct($input: ProductInput!) {
+  createProduct(input: $input) {
+    product {
+      id
+      title
+      description
+      unitOfMeasurement
+      materialType
+      createdAt
+      updatedAt
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

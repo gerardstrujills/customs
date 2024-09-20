@@ -1,0 +1,27 @@
+mutation UpdateEntry($id: Int!, $input: EntryUpdateInput!) {
+  updateEntry(id: $id, input: $input) {
+    entry {
+      id
+      quantity
+      price
+      startTime
+      createdAt
+      updatedAt
+      supplier {
+        id
+        name
+        ruc
+        district
+        province
+        department
+        productCount
+        createdAt
+        updatedAt
+      }
+    }
+    errors {
+      field
+      message
+    }
+  }
+}

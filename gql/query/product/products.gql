@@ -1,0 +1,38 @@
+query Products {
+  products {
+    id
+    title
+    description
+    unitOfMeasurement
+    materialType
+    createdAt
+    updatedAt
+    withdrawal {
+      id
+      title
+      quantity
+      endTime
+      createdAt
+      updatedAt
+    }
+    entry {
+      id
+      quantity
+      price
+      startTime
+      createdAt
+      updatedAt
+      supplier {
+        id
+        name
+        ruc
+        district
+        province
+        department
+        productCount
+        createdAt
+        updatedAt
+      }
+    }
+  }
+}

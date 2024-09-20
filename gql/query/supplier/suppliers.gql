@@ -1,0 +1,13 @@
+query Suppliers {
+  suppliers {
+    id
+    name
+    ruc
+    district
+    province
+    department
+    productCount
+    createdAt
+    updatedAt
+  }
+}
