@@ -1,7 +1,7 @@
 import { formatMonthAndDay } from "@/func/typeDate";
 import { gql, Reference } from "@apollo/client";
 import { capitalizeWords } from "@/func/typeString";
-import { useDeleteEntryMutation } from "@/gen/gql";
+import { MeQuery, useDeleteEntryMutation } from "@/gen/gql";
 import React, { useState } from "react";
 import EntryUpdate from "../Entry/EntryUpdate";
 import Link from "next/link";
@@ -27,10 +27,11 @@ type Entry = {
 };
 
 type Props = {
+  user: MeQuery;
   entry: Entry[];
 };
 
-const ItemProductoCard = ({ entry }: Props) => {
+const ItemProductoCard = ({ entry, user }: Props) => {
   const [supplierId, setSupplierId] = useState<number | null>(null);
   const [deleteEntry] = useDeleteEntryMutation();
 
@@ -138,47 +139,49 @@ const ItemProductoCard = ({ entry }: Props) => {
                 </div>
               </div>
             </div>
-            <div className="d-flex">
-              <div
-                onClick={() => handleDelete(e.id)}
-                className="s-link s-user-card--link d-flex gs4 ml4"
-              >
-                <svg
-                  height="16"
-                  viewBox="0 0 16 16"
-                  version="1.1"
-                  width="16"
-                  className="svg-icon iconTack d-block mx-auto"
-                >
-                  <path d="M2.343 13.657A8 8 0 1 1 13.658 2.343 8 8 0 0 1 2.343 13.657ZM6.03 4.97a.751.751 0 0 0-1.042.018.751.751 0 0 0-.018 1.042L6.94 8 4.97 9.97a.749.749 0 0 0 .326 1.275.749.749 0 0 0 .734-.215L8 9.06l1.97 1.97a.749.749 0 0 0 1.275-.326.749.749 0 0 0-.215-.734L9.06 8l1.97-1.97a.749.749 0 0 0-.326-1.275.749.749 0 0 0-.734.215L8 6.94Z"></path>
-                </svg>
-                <div className="flex--item -link">Eliminar</div>
-              </div>
-              <div className="s-link s-user-card--link d-flex gs4 ml4">
+            {user.me?.isAccess && (
+              <div className="d-flex">
                 <div
-                  onClick={() => setSupplierId(e.id)}
-                  className="s-user-card--link d-flex gs4 -link ml4"
+                  onClick={() => handleDelete(e.id)}
+                  className="s-link s-user-card--link d-flex gs4 ml4"
                 >
                   <svg
-                    aria-hidden="true"
                     height="16"
                     viewBox="0 0 16 16"
                     version="1.1"
                     width="16"
-                    data-view-component="true"
                     className="svg-icon iconTack d-block mx-auto"
                   >
-                    <path d="m.427 1.927 1.215 1.215a8.002 8.002 0 1 1-1.6 5.685.75.75 0 1 1 1.493-.154 6.5 6.5 0 1 0 1.18-4.458l1.358 1.358A.25.25 0 0 1 3.896 6H.25A.25.25 0 0 1 0 5.75V2.104a.25.25 0 0 1 .427-.177ZM7.75 4a.75.75 0 0 1 .75.75v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5A.75.75 0 0 1 7.75 4Z"></path>
+                    <path d="M2.343 13.657A8 8 0 1 1 13.658 2.343 8 8 0 0 1 2.343 13.657ZM6.03 4.97a.751.751 0 0 0-1.042.018.751.751 0 0 0-.018 1.042L6.94 8 4.97 9.97a.749.749 0 0 0 .326 1.275.749.749 0 0 0 .734-.215L8 9.06l1.97 1.97a.749.749 0 0 0 1.275-.326.749.749 0 0 0-.215-.734L9.06 8l1.97-1.97a.749.749 0 0 0-.326-1.275.749.749 0 0 0-.734.215L8 6.94Z"></path>
                   </svg>
-                  <div className="flex--item -link">Actualizar</div>
+                  <div className="flex--item -link">Eliminar</div>
                 </div>
+                <div className="s-link s-user-card--link d-flex gs4 ml4">
+                  <div
+                    onClick={() => setSupplierId(e.id)}
+                    className="s-user-card--link d-flex gs4 -link ml4"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      version="1.1"
+                      width="16"
+                      data-view-component="true"
+                      className="svg-icon iconTack d-block mx-auto"
+                    >
+                      <path d="m.427 1.927 1.215 1.215a8.002 8.002 0 1 1-1.6 5.685.75.75 0 1 1 1.493-.154 6.5 6.5 0 1 0 1.18-4.458l1.358 1.358A.25.25 0 0 1 3.896 6H.25A.25.25 0 0 1 0 5.75V2.104a.25.25 0 0 1 .427-.177ZM7.75 4a.75.75 0 0 1 .75.75v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5A.75.75 0 0 1 7.75 4Z"></path>
+                    </svg>
+                    <div className="flex--item -link">Actualizar</div>
+                  </div>
+                </div>
+                <EntryUpdate
+                  handleClose={() => setSupplierId(null)}
+                  isOpen={supplierId === e.id}
+                  entry={e}
+                />
               </div>
-              <EntryUpdate
-                handleClose={() => setSupplierId(null)}
-                isOpen={supplierId === e.id}
-                entry={e}
-              />
-            </div>
+            )}
           </div>
         );
       })}

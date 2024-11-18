@@ -1,4 +1,4 @@
-import { Product, ProductsQuery } from "@/gen/gql";
+import { MeQuery, Product, ProductsQuery } from "@/gen/gql";
 import { useActiveTab } from "@/hook/useActiveTab";
 import Link from "next/link";
 import React, { ChangeEvent, useMemo, useState } from "react";
@@ -13,11 +13,12 @@ import {
 } from "@/func/product/productType";
 
 type Props = {
+  user: MeQuery;
   loading: boolean;
   data: ProductsQuery;
 };
 
-function ProductSearch({ data, loading }: Props) {
+function ProductSearch({ data, loading, user }: Props) {
   const [openModal, setOpenModal] = useState(false);
   const [activeTab, handleTabChange] = useActiveTab(`/products`, "all");
 
@@ -155,12 +156,14 @@ function ProductSearch({ data, loading }: Props) {
               <div className="flex--item">Salida</div>
             </Link>
           </div>
+
           {filtered!.length! > 0 && (
             <DocEntries data={filtered!} tab={activeTab} />
           )}
         </div>
       </div>
       <ProductCard
+        user={user!}
         data={sortByCreatedAtDesc({ data: filtered! })!}
         pathname={activeTab}
       />

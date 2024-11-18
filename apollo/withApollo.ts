@@ -6,6 +6,7 @@ import {
   ApolloLink,
   HttpLink,
   InMemoryCache,
+  Observable,
 } from "@apollo/client";
 import { onError } from "@apollo/client/link/error";
 
@@ -15,18 +16,48 @@ const httpLink = new HttpLink({
   fetch,
 });
 
-const createClient = (ctx: NextPageContext) =>
-  new ApolloClient({
+const AUTH_REDIRECT_EVENT = "authRedirect";
+
+const createClient = (ctx: NextPageContext) => {
+  const errorLink = onError(
+    ({ graphQLErrors, networkError, operation, forward }) => {
+      if (graphQLErrors) {
+        for (let err of graphQLErrors) {
+          if (err.message === "not authenticated") {
+            return new Observable((observer) => {
+              if (typeof window !== "undefined") {
+                const currentUrl = new URL(window.location.href);
+                const loginUrl = new URL("/", currentUrl.origin);
+                loginUrl.searchParams.set(
+                  "redirect",
+                  currentUrl.pathname + currentUrl.search
+                );
+
+                const event = new CustomEvent(AUTH_REDIRECT_EVENT, {
+                  detail: { url: loginUrl.toString() },
+                });
+                window.dispatchEvent(event);
+              } else {
+                if (ctx.res) {
+                  ctx.res.writeHead(302, { Location: "/" });
+                  ctx.res.end();
+                }
+              }
+
+              observer.complete();
+            });
+          }
+        }
+      }
+      if (networkError) console.log(`[Network error]: ${networkError}`);
+
+      return forward(operation);
+    }
+  );
+
+  return new ApolloClient({
     link: ApolloLink.from([
-      onError(({ graphQLErrors, networkError }) => {
-        if (graphQLErrors)
-          graphQLErrors.map(({ message, locations, path }) => {
-            console.log(
-              `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
-            );
-          });
-        if (networkError) console.log(`[Network error]: ${networkError}`);
-      }),
+      errorLink,
       setContext((_, { headers }) => {
         return {
           headers: {
@@ -54,5 +85,6 @@ const createClient = (ctx: NextPageContext) =>
       },
     }),
   });
+};
 
 export const withApollo = createWithApollo(createClient);

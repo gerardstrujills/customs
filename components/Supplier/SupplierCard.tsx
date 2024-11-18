@@ -1,5 +1,5 @@
 import { capitalizeWords } from "@/func/typeString";
-import { useDeleteSupplierMutation } from "@/gen/gql";
+import { MeQuery, useDeleteSupplierMutation } from "@/gen/gql";
 import { Reference, StoreObject } from "@apollo/client";
 import Link from "next/link";
 import React from "react";
@@ -15,11 +15,12 @@ type Suppliers = {
 };
 
 type Props = {
+  user: MeQuery;
   pathname: string;
   suppliers: Suppliers[];
 };
 
-function SupplierCard({ pathname, suppliers }: Props) {
+function SupplierCard({ pathname, suppliers, user }: Props) {
   const [deleteSupplier] = useDeleteSupplierMutation();
   const handleDelete = (id: number) => {
     deleteSupplier({
@@ -148,23 +149,25 @@ function SupplierCard({ pathname, suppliers }: Props) {
                       </>
                     ) : (
                       <div className="s-user-card--link d-flex gs4">
-                        <div
-                          className="flex--item s-link d-flex"
-                          onClick={() => handleDelete(c.id)}
-                        >
-                          <svg
-                            height="16"
-                            viewBox="0 0 16 16"
-                            version="1.1"
-                            width="16"
-                            className="svg-icon iconTack d-block mx-auto"
+                        {user?.me?.isAccess && (
+                          <div
+                            className="flex--item s-link d-flex"
+                            onClick={() => handleDelete(c.id)}
                           >
-                            <path d="M2.343 13.657A8 8 0 1 1 13.658 2.343 8 8 0 0 1 2.343 13.657ZM6.03 4.97a.751.751 0 0 0-1.042.018.751.751 0 0 0-.018 1.042L6.94 8 4.97 9.97a.749.749 0 0 0 .326 1.275.749.749 0 0 0 .734-.215L8 9.06l1.97 1.97a.749.749 0 0 0 1.275-.326.749.749 0 0 0-.215-.734L9.06 8l1.97-1.97a.749.749 0 0 0-.326-1.275.749.749 0 0 0-.734.215L8 6.94Z"></path>
-                          </svg>
-                          <div className="flex--item ml2 -link ta-center jc-center ai-center d-flex">
-                            Eliminar
+                            <svg
+                              height="16"
+                              viewBox="0 0 16 16"
+                              version="1.1"
+                              width="16"
+                              className="svg-icon iconTack d-block mx-auto"
+                            >
+                              <path d="M2.343 13.657A8 8 0 1 1 13.658 2.343 8 8 0 0 1 2.343 13.657ZM6.03 4.97a.751.751 0 0 0-1.042.018.751.751 0 0 0-.018 1.042L6.94 8 4.97 9.97a.749.749 0 0 0 .326 1.275.749.749 0 0 0 .734-.215L8 9.06l1.97 1.97a.749.749 0 0 0 1.275-.326.749.749 0 0 0-.215-.734L9.06 8l1.97-1.97a.749.749 0 0 0-.326-1.275.749.749 0 0 0-.734.215L8 6.94Z"></path>
+                            </svg>
+                            <div className="flex--item ml2 -link ta-center jc-center ai-center d-flex">
+                              Eliminar
+                            </div>
                           </div>
-                        </div>
+                        )}
                       </div>
                     )}
                   </div>

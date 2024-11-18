@@ -2,12 +2,12 @@ import { useActiveTab } from "@/hook/useActiveTab";
 import React, { ChangeEvent, useMemo, useState } from "react";
 import Loading from "../Loading";
 import Link from "next/link";
-import { SuppliersQuery } from "@/gen/gql";
+import { MeQuery, SuppliersQuery } from "@/gen/gql";
 import SupplierCard from "./SupplierCard";
 
-type Props = { data: SuppliersQuery; loading: boolean };
+type Props = { data: SuppliersQuery; loading: boolean; user: MeQuery };
 
-const SupplierSearch = ({ data, loading }: Props) => {
+const SupplierSearch = ({ data, loading, user }: Props) => {
   const [activeTab, handleTabChange] = useActiveTab(`/suppliers`, "all");
   const [searchTerm, setSearchTerm] = useState("");
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -107,7 +107,11 @@ const SupplierSearch = ({ data, loading }: Props) => {
         {!data && loading ? (
           <Loading />
         ) : (
-          <SupplierCard pathname={activeTab} suppliers={filtered} />
+          <SupplierCard
+            user={user!}
+            pathname={activeTab}
+            suppliers={filtered}
+          />
         )}
       </div>
     </div>

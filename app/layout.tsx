@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { AuthRedirectHandler } from "@/components/Auth/AuthRedirectHandler";
 
 export const metadata: Metadata = {
   title: "D&R",
@@ -21,7 +22,10 @@ export default function RootLayout({
         <link rel="stylesheet" href="/styles/theme.css" />
         <link rel="stylesheet" href="/styles/login.css" />
       </head>
-      <body className="home-page unified-theme">{children}</body>
+      <body className="home-page unified-theme">
+        <AuthRedirectHandler />
+        {children}
+      </body>
     </html>
   );
 }

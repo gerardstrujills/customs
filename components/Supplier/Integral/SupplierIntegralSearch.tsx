@@ -1,4 +1,4 @@
-import { SupplierQuery } from "@/gen/gql";
+import { MeQuery, SupplierQuery } from "@/gen/gql";
 import { useActiveTab } from "@/hook/useActiveTab";
 import Link from "next/link";
 import React, { ChangeEvent, useMemo, useState } from "react";
@@ -6,10 +6,11 @@ import SupplierIntegralCard from "./SupplierIntegralCard";
 import Doc from "@/doc/xls";
 
 type Props = {
+  user: MeQuery;
   data: SupplierQuery;
 };
 
-function SupplierIntegralSearch({ data }: Props) {
+function SupplierIntegralSearch({ data, user }: Props) {
   const {
     id,
     name,
@@ -79,6 +80,7 @@ function SupplierIntegralSearch({ data }: Props) {
         </div>
       </div>
       <SupplierIntegralCard
+        user={user!}
         entry={filtered}
         pathname={activeTab}
         supplier={{

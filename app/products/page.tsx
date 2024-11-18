@@ -2,32 +2,52 @@
 import { withApollo } from "@/apollo/withApollo";
 import { Component } from "@/components/Charts/charts";
 import Container from "@/components/Container";
+import Loading from "@/components/Loading";
 import ProductSearch from "@/components/Product/ProductSearch";
-import { useProductsQuery } from "@/gen/gql";
+import { useMeQuery, useProductsQuery } from "@/gen/gql";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
-const page = () => {
-  const { data, error, loading, refetch } = useProductsQuery();
+const Page = () => {
+  const { data, error: productError, loading, refetch } = useProductsQuery();
+  const { data: user, refetch: userFetch, error: userError } = useMeQuery();
+
+  const router = useRouter();
 
   useEffect(() => {
-    refetch();
-  }, [refetch]);
+    if (!loading && productError) {
+      if (productError.message === "not authenticated") {
+        router.push("/");
+      }
+    }
 
-  if (!loading && !data) {
+    if (!loading && userError) {
+      if (userError.message === "not authenticated") {
+        router.push("/");
+      }
+    }
+
+    if (!loading) {
+      refetch();
+      userFetch();
+    }
+  }, [loading, productError, userError, router, refetch, userFetch]);
+
+  if (loading || !data || !user) {
     return (
-      <>
-        <div>Tu consulta falló por alguna razón Suppliers</div>
-        <div>{error?.message}</div>
-      </>
+      <Container user={user!} className="d-flex jc-center ai-center">
+        <Loading />
+      </Container>
     );
   }
+
   return (
-    <Container>
+    <Container user={user!}>
       <div id="mainbar-full" className="user-show-new">
         <div id="main-content">
           <div className="d-flex gs24 md:fd-column">
             <div className="flex--item fl-grow1">
-              <ProductSearch data={data!} loading={loading} />
+              <ProductSearch user={user!} data={data!} loading={loading} />
             </div>
             <div className="flex--item3 fl-shrink0 md:order-last mt0">
               <div className="d-grid">
@@ -41,4 +61,4 @@ const page = () => {
   );
 };
 
-export default withApollo({ ssr: false })(page);
+export default withApollo({ ssr: false })(Page);

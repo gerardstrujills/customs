@@ -6,9 +6,9 @@ import Container from "@/components/Container";
 import Header from "@/components/Header";
 import Loading from "@/components/Loading";
 import SupplierIntegralSearch from "@/components/Supplier/Integral/SupplierIntegralSearch";
-import { useSupplierQuery } from "@/gen/gql";
+import { useMeQuery, useSupplierQuery } from "@/gen/gql";
 import useGetIntParam from "@/utils/useGetIntParam";
-import Link from "next/link";
+import { useRouter } from "next/navigation";
 import React, { useEffect } from "react";
 
 type Props = {};
@@ -21,21 +21,41 @@ const page = ({}: Props) => {
       supplierId: intId,
     },
   });
+  const { data: user, refetch: userFetch, error: userError } = useMeQuery();
+
+  const router = useRouter();
 
   useEffect(() => {
+    if (!loading && error) {
+      if (error.message === "not authenticated") {
+        router.push("/");
+      }
+    }
+
+    if (!loading && userError) {
+      if (userError.message === "not authenticated") {
+        router.push("/");
+      }
+    }
+
     refetch();
-  }, [refetch]);
+    userFetch();
+  }, [loading, error, userError, router, refetch, userFetch]);
 
   if (loading) {
     return (
-      <Container className="d-flex jc-center ai-center">
+      <Container user={user!} className="d-flex jc-center ai-center">
         <Loading />
       </Container>
     );
   }
 
-  if (error) {
-    return <div>Error: {error.message}</div>;
+  if (!loading && !data && !user) {
+    return (
+      <Container user={user!} className="d-flex jc-center ai-center">
+        <Loading />
+      </Container>
+    );
   }
 
   if (!data?.supplier) {
@@ -43,25 +63,18 @@ const page = ({}: Props) => {
   }
 
   return (
-    <Container>
+    <Container user={user!}>
       <div id="mainbar-full" className="user-show-new">
         <div id="main-content">
           <div className="d-flex gs24 md:fd-column">
             <div className="flex--item fl-grow1">
-              <Breadcrumbs
-                items={[
-                  { text: "Santasa", link: "/" },
-                  { text: "Corporaciones", link: "/suppliers" },
-                ]}
-              />
-
               <Header supplier={data.supplier} />
 
-              <SupplierIntegralSearch data={data} />
+              <SupplierIntegralSearch user={user!} data={data} />
             </div>
             <div className="flex--item3 fl-shrink0 md:order-last mt0">
               <div className="d-grid">
-              <SupplierChart data={data!}/>
+                <SupplierChart data={data!} />
               </div>
             </div>
           </div>

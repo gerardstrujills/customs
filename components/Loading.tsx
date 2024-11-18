@@ -1,8 +1,11 @@
 import React from "react";
 
-const Loading: React.FC<{ size?: string }> = ({ size }) => {
+const Loading: React.FC<{ size?: string; className?: string }> = ({
+  size,
+  className,
+}) => {
   return (
-    <div className="d-flex jc-center ai-center ta-center pt8">
+    <div className={className ?? "d-flex jc-center ai-center ta-center pt8"}>
       <svg
         width={size ? size : "32"}
         height={size ? size : "32"}
