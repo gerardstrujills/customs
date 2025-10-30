@@ -11,7 +11,7 @@ import {
 import { onError } from "@apollo/client/link/error";
 
 const httpLink = new HttpLink({
-  uri: "http://localhost:8080/graphql",
+  uri: "https://gqlcustoms-production.up.railway.app/graphql",
   credentials: "include",
   fetch,
 });
