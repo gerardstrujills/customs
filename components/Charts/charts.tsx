@@ -81,7 +81,7 @@ export function Component({ data }: Props) {
 
   return (
     <>
-      <CardHeader>
+      {/* <CardHeader>
         <CardTitle>Productos</CardTitle>
         <CardDescription>
           Mostrando la cantidad total de entradas por producto
@@ -111,7 +111,7 @@ export function Component({ data }: Props) {
             />
           </BarChart>
         </ChartContainer>
-      </CardContent>
+      </CardContent> */}
       <CardHeader>
         <CardTitle>Almacén</CardTitle>
       </CardHeader>
