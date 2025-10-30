@@ -1,5 +1,5 @@
 [build]
-  command = "next build --no-lint"
+  command = "next build"
   publish = ".next"
 
 [[plugins]]
