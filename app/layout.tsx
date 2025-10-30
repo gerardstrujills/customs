@@ -3,7 +3,7 @@ import "./globals.css";
 import { AuthRedirectHandler } from "@/components/Auth/AuthRedirectHandler";
 
 export const metadata: Metadata = {
-  title: "D&R",
+  title: "Multiservicios Catunta E.I.R.L.",
 };
 
 export default function RootLayout({
