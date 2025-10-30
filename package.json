@@ -31,6 +31,7 @@
     "@graphql-codegen/client-preset": "^4.3.3",
     "@graphql-codegen/typescript-operations": "^4.2.3",
     "@graphql-codegen/typescript-react-apollo": "^4.3.2",
+    "@netlify/plugin-nextjs": "^5.14.4",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
