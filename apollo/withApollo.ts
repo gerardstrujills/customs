@@ -1,6 +1,3 @@
-import { NextPageContext } from "next";
-import { setContext } from "@apollo/client/link/context";
-import { createWithApollo } from "./createWithApollo";
 import {
   ApolloClient,
   ApolloLink,
@@ -8,7 +5,10 @@ import {
   InMemoryCache,
   Observable,
 } from "@apollo/client";
+import { setContext } from "@apollo/client/link/context";
 import { onError } from "@apollo/client/link/error";
+import { NextPageContext } from "next";
+import { createWithApollo } from "./createWithApollo";
 
 const httpLink = new HttpLink({
   uri: "https://gqlcustoms-production.up.railway.app/graphql",
@@ -22,7 +22,7 @@ const createClient = (ctx: NextPageContext) => {
   const errorLink = onError(
     ({ graphQLErrors, networkError, operation, forward }) => {
       if (graphQLErrors) {
-        for (let err of graphQLErrors) {
+        for (const err of graphQLErrors) {
           if (err.message === "not authenticated") {
             return new Observable((observer) => {
               if (typeof window !== "undefined") {

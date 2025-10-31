@@ -1,18 +1,18 @@
-import React, { useState } from "react";
-import Link from "next/link";
 import CardEmpty from "@/components/CardEmpty";
-import ItemProductoCard from "./ItemProductoCard";
 import {
   filterProductsByEntry,
   getFilteredAndSortedProducts,
   getWithdrawalsFromProducts,
 } from "@/func/product/productType";
-import TagList from "../TagList";
-import EntryCreate from "../Entry/EntryCreate";
 import { MeQuery, useDeleteProductMutation } from "@/gen/gql";
 import { Reference, StoreObject } from "@apollo/client";
-import WithdrawalCreate from "../Withdrawal/WithdrawalCreate";
+import Link from "next/link";
+import { useState } from "react";
+import EntryCreate from "../Entry/EntryCreate";
+import TagList from "../TagList";
 import ItemWithdrawalCard from "../Withdrawal/ItemWithdrawalCard";
+import WithdrawalCreate from "../Withdrawal/WithdrawalCreate";
+import ItemProductoCard from "./ItemProductoCard";
 
 type Product = {
   __typename?: "Product";
@@ -249,7 +249,7 @@ const ProductCard = ({ pathname, data, user }: Props) => {
               <div className="d-flex">
                 <div className="flex--item fl1 ">
                   {q.description && (
-                    <span className="fc-black-400 mr2">{q.description}</span>
+                    <span className="fc-black-400 mr2">METODOLOGIA {q.description}</span>
                   )}
                 </div>
                 <div className="ml12 aside-cta flex--item">

@@ -1,0 +1,13 @@
+query Stock($filters: StockFilters!) {
+  stock(filters: $filters) {
+    id
+    title
+    description
+    unitOfMeasurement
+    materialType
+    totalStock
+    averagePrice
+    totalValue
+    createdAt
+  }
+}

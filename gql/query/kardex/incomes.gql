@@ -1,0 +1,24 @@
+query Incomes($filters: IncomeFilters!) {
+  incomes(filters: $filters) {
+    id
+    quantity
+    price
+    startTime
+    createdAt
+    product {
+      id
+      title
+      description
+      unitOfMeasurement
+      materialType
+    }
+    supplier {
+      id
+      name
+      ruc
+      district
+      province
+      department
+    }
+  }
+}

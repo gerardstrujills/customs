@@ -1,0 +1,16 @@
+query Withdrawals($filters: WithdrawalFilters!) {
+  withdrawals(filters: $filters) {
+    id
+    title
+    quantity
+    endTime
+    createdAt
+    product {
+      id
+      title
+      description
+      unitOfMeasurement
+      materialType
+    }
+  }
+}

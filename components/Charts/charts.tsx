@@ -1,13 +1,4 @@
-import {
-  Bar,
-  BarChart,
-  Cell,
-  Label,
-  Pie,
-  PieChart,
-  XAxis,
-  YAxis,
-} from "recharts";
+"use client";
 
 import {
   CardContent,
@@ -22,8 +13,16 @@ import {
 } from "@/components/ui/chart";
 import { ProductsQuery } from "@/gen/gql";
 import React from "react";
-
-export const description = "A mixed bar chart";
+import {
+  Bar,
+  BarChart,
+  Cell,
+  Label,
+  Pie,
+  PieChart,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 type Props = {
   data: ProductsQuery;
@@ -48,9 +47,11 @@ const COLORS = [
 ];
 
 export function Component({ data }: Props) {
-  const chartTotal = React.useMemo(() => {
-    return (
-      data?.products?.map((product) => {
+  const chartData = React.useMemo(() => {
+    if (!data?.products) return [];
+
+    return data.products
+      .map((product) => {
         const totalQuantity = product.entry.reduce(
           (sum, entry) => sum + entry.quantity,
           0
@@ -59,29 +60,26 @@ export function Component({ data }: Props) {
           title: product.title,
           quantity: totalQuantity,
         };
-      }) || []
-    );
+      })
+      .filter((p) => p.quantity > 0)
+      .sort((a, b) => b.quantity - a.quantity);
   }, [data]);
 
   const totalQuantity = React.useMemo(() => {
-    return chartTotal.reduce((acc, curr) => acc + curr.quantity, 0);
-  }, [chartTotal]);
+    return chartData.reduce((acc, curr) => acc + curr.quantity, 0);
+  }, [chartData]);
 
-  const chartData = data?.products?.map((product) => {
-    const totalQuantity = product.entry.reduce(
-      (sum, entry) => sum + entry.quantity,
-      0
+  if (chartData.length === 0) {
+    return (
+      <CardContent className="text-center py-10 text-muted-foreground">
+        No hay productos con cantidades registradas.
+      </CardContent>
     );
-    return {
-      title: product.title,
-      quantity: totalQuantity,
-      fill: "var(--color-product)",
-    };
-  });
+  }
 
   return (
     <>
-      {/* <CardHeader>
+      <CardHeader>
         <CardTitle>Productos</CardTitle>
         <CardDescription>
           Mostrando la cantidad total de entradas por producto
@@ -89,16 +87,20 @@ export function Component({ data }: Props) {
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
-          <BarChart data={chartData} layout="vertical" margin={{ left: 0 }}>
+          <BarChart
+            data={chartData}
+            layout="vertical"
+            margin={{ left: 0, right: 20 }}
+          >
             <YAxis
               dataKey="title"
               type="category"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
-              tickFormatter={(value) => value}
+              width={150}
             />
-            <XAxis dataKey="quantity" name="Cantidad" type="number" hide />
+            <XAxis dataKey="quantity" type="number" hide />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent hideLabel />}
@@ -108,10 +110,18 @@ export function Component({ data }: Props) {
               name="Cantidad"
               layout="vertical"
               radius={5}
-            />
+            >
+              {chartData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={COLORS[index % COLORS.length]}
+                />
+              ))}
+            </Bar>
           </BarChart>
         </ChartContainer>
-      </CardContent> */}
+      </CardContent>
+
       <CardHeader>
         <CardTitle>Almacén</CardTitle>
       </CardHeader>
@@ -119,14 +129,14 @@ export function Component({ data }: Props) {
         <PieChart>
           <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
           <Pie
-            data={chartTotal}
+            data={chartData}
             dataKey="quantity"
             nameKey="title"
             innerRadius={60}
             outerRadius={80}
             paddingAngle={0}
           >
-            {chartTotal.map((entry, index) => (
+            {chartData.map((entry, index) => (
               <Cell
                 key={`cell-${index}`}
                 fill={COLORS[index % COLORS.length]}

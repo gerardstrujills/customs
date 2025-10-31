@@ -1,13 +1,13 @@
-import React from "react";
-import { usePathname } from "next/navigation";
-import Link from "next/link";
 import { MeQuery, useLogoutMutation } from "@/gen/gql";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import React from "react";
 import Loading from "./Loading";
 
 const LeftSidebar: React.FC<{
   dataIsHereWhen?: boolean;
   user: MeQuery;
-}> = ({ dataIsHereWhen, user }) => {
+}> = ({ dataIsHereWhen }) => {
   const pathname = usePathname();
   const [logout, { client, loading }] = useLogoutMutation();
 
@@ -39,7 +39,70 @@ const LeftSidebar: React.FC<{
               <li>
                 <ol className="nav-links">
                   <li className="fs-fine tt-uppercase ml8 mt16 mb4 fc-light">
-                    Público
+                    KARDEX
+                  </li>
+
+                  <li
+                    className={`ps-relative ${
+                      pathname.startsWith("/stocks") ? "youarehere" : ""
+                    }`}
+                    aria-current={
+                      pathname.startsWith("/stocks") ? "true" : "false"
+                    }
+                  >
+                    <Link href="/stocks" passHref legacyBehavior>
+                      <a
+                        className={`js-gps-track nav-links--link${
+                          pathname.startsWith("/stocks") ? " active" : ""
+                        }`}
+                      >
+                        <div className="d-flex ai-center">
+                          <div className="flex--item truncate">Stocks</div>
+                        </div>
+                      </a>
+                    </Link>
+                  </li>
+
+                  <li
+                    className={`ps-relative ${
+                      pathname.startsWith("/withdrawals") ? "youarehere" : ""
+                    }`}
+                    aria-current={
+                      pathname.startsWith("/withdrawals") ? "true" : "false"
+                    }
+                  >
+                    <Link href="/withdrawals" passHref legacyBehavior>
+                      <a
+                        className={`js-gps-track nav-links--link${
+                          pathname.startsWith("/withdrawals") ? " active" : ""
+                        }`}
+                      >
+                        <div className="d-flex ai-center">
+                          <div className="flex--item truncate">Salidas</div>
+                        </div>
+                      </a>
+                    </Link>
+                  </li>
+
+                  <li
+                    className={`ps-relative ${
+                      pathname.startsWith("/incomes") ? "youarehere" : ""
+                    }`}
+                    aria-current={
+                      pathname.startsWith("/incomes") ? "true" : "false"
+                    }
+                  >
+                    <Link href="/incomes" passHref legacyBehavior>
+                      <a
+                        className={`js-gps-track nav-links--link${
+                          pathname.startsWith("/incomes") ? " active" : ""
+                        }`}
+                      >
+                        <div className="d-flex ai-center">
+                          <div className="flex--item truncate">Entradas</div>
+                        </div>
+                      </a>
+                    </Link>
                   </li>
 
                   <li
@@ -64,6 +127,7 @@ const LeftSidebar: React.FC<{
                   </li>
                 </ol>
               </li>
+
               <li className={`ps-relative`} aria-current="false">
                 <div
                   className="ml8 mt14"

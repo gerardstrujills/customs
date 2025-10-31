@@ -64,6 +64,31 @@ export type FieldError = {
   message: Scalars['String']['output'];
 };
 
+export type IncomeFilters = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  endTime?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  materialType?: InputMaybe<Scalars['String']['input']>;
+  startTime?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  supplierDepartment?: InputMaybe<Scalars['String']['input']>;
+  supplierDistrict?: InputMaybe<Scalars['String']['input']>;
+  supplierName?: InputMaybe<Scalars['String']['input']>;
+  supplierProvince?: InputMaybe<Scalars['String']['input']>;
+  supplierRuc?: InputMaybe<Scalars['String']['input']>;
+  unitOfMeasurement?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type IncomeResponse = {
+  __typename?: 'IncomeResponse';
+  createdAt: Scalars['DateTimeISO']['output'];
+  id: Scalars['Int']['output'];
+  price: Scalars['Float']['output'];
+  product: ProductInfo;
+  quantity: Scalars['Int']['output'];
+  startTime: Scalars['DateTimeISO']['output'];
+  supplier: SupplierInfo;
+  updatedAt: Scalars['DateTimeISO']['output'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   createEntry: EntryResponse;
@@ -170,6 +195,15 @@ export type ProductFieldError = {
   message: Scalars['String']['output'];
 };
 
+export type ProductInfo = {
+  __typename?: 'ProductInfo';
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  materialType: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  unitOfMeasurement: Scalars['String']['output'];
+};
+
 export type ProductInput = {
   description?: InputMaybe<Scalars['String']['input']>;
   materialType: Scalars['String']['input'];
@@ -186,15 +220,60 @@ export type ProductResponse = {
 export type Query = {
   __typename?: 'Query';
   entries?: Maybe<Array<Entry>>;
+  incomes?: Maybe<Array<IncomeResponse>>;
   me?: Maybe<User>;
   products?: Maybe<Array<Product>>;
+  stock?: Maybe<Array<StockResponse>>;
   supplier?: Maybe<Supplier>;
   suppliers?: Maybe<Array<Supplier>>;
+  withdrawals?: Maybe<Array<WithdrawalKardexResponse>>;
+};
+
+
+export type QueryIncomesArgs = {
+  filters?: InputMaybe<IncomeFilters>;
+};
+
+
+export type QueryStockArgs = {
+  filters?: InputMaybe<StockFilters>;
 };
 
 
 export type QuerySupplierArgs = {
   id: Scalars['Int']['input'];
+};
+
+
+export type QueryWithdrawalsArgs = {
+  filters?: InputMaybe<WithdrawalFilters>;
+};
+
+export type StockFilters = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  endTime?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  materialType?: InputMaybe<Scalars['String']['input']>;
+  startTime?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  supplierDepartment?: InputMaybe<Scalars['String']['input']>;
+  supplierDistrict?: InputMaybe<Scalars['String']['input']>;
+  supplierName?: InputMaybe<Scalars['String']['input']>;
+  supplierProvince?: InputMaybe<Scalars['String']['input']>;
+  supplierRuc?: InputMaybe<Scalars['String']['input']>;
+  unitOfMeasurement?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type StockResponse = {
+  __typename?: 'StockResponse';
+  averagePrice: Scalars['Float']['output'];
+  createdAt: Scalars['DateTimeISO']['output'];
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  materialType: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  totalStock: Scalars['Int']['output'];
+  totalValue: Scalars['Float']['output'];
+  unitOfMeasurement: Scalars['String']['output'];
+  updatedAt: Scalars['DateTimeISO']['output'];
 };
 
 export type Supplier = {
@@ -216,6 +295,16 @@ export type SupplierFieldError = {
   __typename?: 'SupplierFieldError';
   field: Scalars['String']['output'];
   message: Scalars['String']['output'];
+};
+
+export type SupplierInfo = {
+  __typename?: 'SupplierInfo';
+  department?: Maybe<Scalars['String']['output']>;
+  district?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  name: Scalars['String']['output'];
+  province?: Maybe<Scalars['String']['output']>;
+  ruc?: Maybe<Scalars['String']['output']>;
 };
 
 export type SupplierInput = {
@@ -269,11 +358,40 @@ export type WithdrawalFieldError = {
   message: Scalars['String']['output'];
 };
 
+export type WithdrawalFilters = {
+  description?: InputMaybe<Scalars['String']['input']>;
+  endTime?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  materialType?: InputMaybe<Scalars['String']['input']>;
+  startTime?: InputMaybe<Scalars['DateTimeISO']['input']>;
+  title?: InputMaybe<Scalars['String']['input']>;
+  unitOfMeasurement?: InputMaybe<Scalars['String']['input']>;
+};
+
 export type WithdrawalInput = {
   endTime: Scalars['DateTimeISO']['input'];
   productId: Scalars['Float']['input'];
   quantity: Scalars['Float']['input'];
   title: Scalars['String']['input'];
+};
+
+export type WithdrawalKardexResponse = {
+  __typename?: 'WithdrawalKardexResponse';
+  createdAt: Scalars['DateTimeISO']['output'];
+  endTime: Scalars['DateTimeISO']['output'];
+  id: Scalars['Int']['output'];
+  product: WithdrawalProductInfo;
+  quantity: Scalars['Int']['output'];
+  title?: Maybe<Scalars['String']['output']>;
+  updatedAt: Scalars['DateTimeISO']['output'];
+};
+
+export type WithdrawalProductInfo = {
+  __typename?: 'WithdrawalProductInfo';
+  description?: Maybe<Scalars['String']['output']>;
+  id: Scalars['Int']['output'];
+  materialType: Scalars['String']['output'];
+  title: Scalars['String']['output'];
+  unitOfMeasurement: Scalars['String']['output'];
 };
 
 export type WithdrawalResponse = {
@@ -377,6 +495,27 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', email: string, username: string, isAccess: boolean } | null };
+
+export type IncomesQueryVariables = Exact<{
+  filters: IncomeFilters;
+}>;
+
+
+export type IncomesQuery = { __typename?: 'Query', incomes?: Array<{ __typename?: 'IncomeResponse', id: number, quantity: number, price: number, startTime: any, createdAt: any, product: { __typename?: 'ProductInfo', id: number, title: string, description?: string | null, unitOfMeasurement: string, materialType: string }, supplier: { __typename?: 'SupplierInfo', id: number, name: string, ruc?: string | null, district?: string | null, province?: string | null, department?: string | null } }> | null };
+
+export type WithdrawalsQueryVariables = Exact<{
+  filters: WithdrawalFilters;
+}>;
+
+
+export type WithdrawalsQuery = { __typename?: 'Query', withdrawals?: Array<{ __typename?: 'WithdrawalKardexResponse', id: number, title?: string | null, quantity: number, endTime: any, createdAt: any, product: { __typename?: 'WithdrawalProductInfo', id: number, title: string, description?: string | null, unitOfMeasurement: string, materialType: string } }> | null };
+
+export type StockQueryVariables = Exact<{
+  filters: StockFilters;
+}>;
+
+
+export type StockQuery = { __typename?: 'Query', stock?: Array<{ __typename?: 'StockResponse', id: number, title: string, description?: string | null, unitOfMeasurement: string, materialType: string, totalStock: number, averagePrice: number, totalValue: number, createdAt: any }> | null };
 
 export type CreateProductMutationVariables = Exact<{
   input: ProductInput;
@@ -918,6 +1057,164 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeSuspenseQueryHookResult = ReturnType<typeof useMeSuspenseQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const IncomesDocument = gql`
+    query Incomes($filters: IncomeFilters!) {
+  incomes(filters: $filters) {
+    id
+    quantity
+    price
+    startTime
+    createdAt
+    product {
+      id
+      title
+      description
+      unitOfMeasurement
+      materialType
+    }
+    supplier {
+      id
+      name
+      ruc
+      district
+      province
+      department
+    }
+  }
+}
+    `;
+
+/**
+ * __useIncomesQuery__
+ *
+ * To run a query within a React component, call `useIncomesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIncomesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIncomesQuery({
+ *   variables: {
+ *      filters: // value for 'filters'
+ *   },
+ * });
+ */
+export function useIncomesQuery(baseOptions: Apollo.QueryHookOptions<IncomesQuery, IncomesQueryVariables> & ({ variables: IncomesQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<IncomesQuery, IncomesQueryVariables>(IncomesDocument, options);
+      }
+export function useIncomesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IncomesQuery, IncomesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<IncomesQuery, IncomesQueryVariables>(IncomesDocument, options);
+        }
+export function useIncomesSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<IncomesQuery, IncomesQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<IncomesQuery, IncomesQueryVariables>(IncomesDocument, options);
+        }
+export type IncomesQueryHookResult = ReturnType<typeof useIncomesQuery>;
+export type IncomesLazyQueryHookResult = ReturnType<typeof useIncomesLazyQuery>;
+export type IncomesSuspenseQueryHookResult = ReturnType<typeof useIncomesSuspenseQuery>;
+export type IncomesQueryResult = Apollo.QueryResult<IncomesQuery, IncomesQueryVariables>;
+export const WithdrawalsDocument = gql`
+    query Withdrawals($filters: WithdrawalFilters!) {
+  withdrawals(filters: $filters) {
+    id
+    title
+    quantity
+    endTime
+    createdAt
+    product {
+      id
+      title
+      description
+      unitOfMeasurement
+      materialType
+    }
+  }
+}
+    `;
+
+/**
+ * __useWithdrawalsQuery__
+ *
+ * To run a query within a React component, call `useWithdrawalsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useWithdrawalsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useWithdrawalsQuery({
+ *   variables: {
+ *      filters: // value for 'filters'
+ *   },
+ * });
+ */
+export function useWithdrawalsQuery(baseOptions: Apollo.QueryHookOptions<WithdrawalsQuery, WithdrawalsQueryVariables> & ({ variables: WithdrawalsQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<WithdrawalsQuery, WithdrawalsQueryVariables>(WithdrawalsDocument, options);
+      }
+export function useWithdrawalsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<WithdrawalsQuery, WithdrawalsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<WithdrawalsQuery, WithdrawalsQueryVariables>(WithdrawalsDocument, options);
+        }
+export function useWithdrawalsSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<WithdrawalsQuery, WithdrawalsQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<WithdrawalsQuery, WithdrawalsQueryVariables>(WithdrawalsDocument, options);
+        }
+export type WithdrawalsQueryHookResult = ReturnType<typeof useWithdrawalsQuery>;
+export type WithdrawalsLazyQueryHookResult = ReturnType<typeof useWithdrawalsLazyQuery>;
+export type WithdrawalsSuspenseQueryHookResult = ReturnType<typeof useWithdrawalsSuspenseQuery>;
+export type WithdrawalsQueryResult = Apollo.QueryResult<WithdrawalsQuery, WithdrawalsQueryVariables>;
+export const StockDocument = gql`
+    query Stock($filters: StockFilters!) {
+  stock(filters: $filters) {
+    id
+    title
+    description
+    unitOfMeasurement
+    materialType
+    totalStock
+    averagePrice
+    totalValue
+    createdAt
+  }
+}
+    `;
+
+/**
+ * __useStockQuery__
+ *
+ * To run a query within a React component, call `useStockQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStockQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStockQuery({
+ *   variables: {
+ *      filters: // value for 'filters'
+ *   },
+ * });
+ */
+export function useStockQuery(baseOptions: Apollo.QueryHookOptions<StockQuery, StockQueryVariables> & ({ variables: StockQueryVariables; skip?: boolean; } | { skip: boolean; }) ) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<StockQuery, StockQueryVariables>(StockDocument, options);
+      }
+export function useStockLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StockQuery, StockQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<StockQuery, StockQueryVariables>(StockDocument, options);
+        }
+export function useStockSuspenseQuery(baseOptions?: Apollo.SkipToken | Apollo.SuspenseQueryHookOptions<StockQuery, StockQueryVariables>) {
+          const options = baseOptions === Apollo.skipToken ? baseOptions : {...defaultOptions, ...baseOptions}
+          return Apollo.useSuspenseQuery<StockQuery, StockQueryVariables>(StockDocument, options);
+        }
+export type StockQueryHookResult = ReturnType<typeof useStockQuery>;
+export type StockLazyQueryHookResult = ReturnType<typeof useStockLazyQuery>;
+export type StockSuspenseQueryHookResult = ReturnType<typeof useStockSuspenseQuery>;
+export type StockQueryResult = Apollo.QueryResult<StockQuery, StockQueryVariables>;
 export const CreateProductDocument = gql`
     mutation CreateProduct($input: ProductInput!) {
   createProduct(input: $input) {
