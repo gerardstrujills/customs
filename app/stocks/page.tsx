@@ -3,6 +3,7 @@
 import { withApollo } from "@/apollo/withApollo";
 import Container from "@/components/Container";
 import StockDateRangePicker from "@/components/stocks/StockDateRangePicker";
+import { StockTable } from "@/components/stocks/StockTable";
 import { useStockFiltersStore } from "@/components/stores/useStockFilterStore";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
@@ -13,7 +14,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { StockTable } from "@/components/Withdrawal/StockTable";
 import { useMeQuery, useStockQuery } from "@/gen/gql";
 import { FilterX } from "lucide-react";
 import { useRouter } from "next/navigation";
