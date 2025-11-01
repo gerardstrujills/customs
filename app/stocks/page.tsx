@@ -14,21 +14,39 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { StockTable } from "@/components/Withdrawal/StockTable";
-import { useMeQuery } from "@/gen/gql";
+import { useMeQuery, useStockQuery } from "@/gen/gql";
 import { FilterX } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const Page = () => {
-  const { data: user, refetch: userFetch, error: userError } = useMeQuery();
-  const router = useRouter();
-
   const {
     resetFilters,
     uniqueFilterValues,
     selectedFilters,
     setSelectedFilters,
+    getCombinedFilters,
+    searchType,
   } = useStockFiltersStore();
+
+  const combinedFilters = getCombinedFilters();
+
+  // Consulta a la API con TODOS los filtros combinados
+  const { data, loading, error, refetch } = useStockQuery({
+    variables: {
+      filters: {
+        ...combinedFilters,
+        // No incluimos description en los filtros de API si es búsqueda de producto
+        // A menos que esté en selectedFilters
+        ...(searchType === "supplier" || selectedFilters.description
+          ? {}
+          : { description: undefined }),
+      },
+    },
+  });
+
+  const { data: user, refetch: userFetch, error: userError } = useMeQuery();
+  const router = useRouter();
 
   const handleFilterChange = (
     key: keyof typeof selectedFilters,
@@ -50,6 +68,7 @@ const Page = () => {
         router.push("/");
       }
     } else {
+      refetch();
       userFetch();
     }
   }, [userError, router, userFetch]);
@@ -68,7 +87,7 @@ const Page = () => {
           {/* Tabla */}
           <div className="d-flex gs24 md:fd-column">
             <div className="flex--item fl-grow1">
-              <StockTable />
+              <StockTable data={data} error={error} loading={loading} />
             </div>
             <div className="flex--item3 fl-shrink0 md:order-last mt0">
               <div className="d-grid">

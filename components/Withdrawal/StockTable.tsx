@@ -1,35 +1,22 @@
 // components/Withdrawal/StockTable.tsx
 "use client";
-import { useStockQuery } from "@/gen/gql";
+import { StockQuery } from "@/gen/gql";
+import { ApolloError } from "@apollo/client";
 import { useEffect, useMemo } from "react";
 import { StockFilters } from "../stocks/StockFilters";
 import { useStockFiltersStore } from "../stores/useStockFilterStore";
 
-export const StockTable = () => {
-  const {
-    searchTerm,
-    searchType,
-    setRawStockData,
-    getCombinedFilters,
-    selectedFilters,
-  } = useStockFiltersStore();
+interface Props {
+  data: StockQuery | undefined;
+  loading: boolean;
+  error: ApolloError | undefined;
+}
 
-  // Obtener filtros combinados (filters + selectedFilters)
+export const StockTable = ({ data, loading, error }: Props) => {
+  const { searchTerm, searchType, setRawStockData, getCombinedFilters } =
+    useStockFiltersStore();
+
   const combinedFilters = getCombinedFilters();
-
-  // Consulta a la API con TODOS los filtros combinados
-  const { data, loading, error } = useStockQuery({
-    variables: {
-      filters: {
-        ...combinedFilters,
-        // No incluimos description en los filtros de API si es búsqueda de producto
-        // A menos que esté en selectedFilters
-        ...(searchType === "supplier" || selectedFilters.description
-          ? {}
-          : { description: undefined }),
-      },
-    },
-  });
 
   useEffect(() => {
     if (data?.stock) {
