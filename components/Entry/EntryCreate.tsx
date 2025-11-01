@@ -3,12 +3,11 @@ import {
   ProductsQuery,
   useCreateEntryMutation,
 } from "@/gen/gql";
-import React from "react";
-import ModalWrapper from "../ModalWrapper";
+import { toErrorMap } from "@/utils/toErrorMap";
+import { Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { InputField } from "../InputField";
-import { Button } from "@chakra-ui/react";
-import { toErrorMap } from "@/utils/toErrorMap";
+import ModalWrapper from "../ModalWrapper";
 
 type Product = {
   id: number;
@@ -45,7 +44,7 @@ const EntryCreate = ({ isOpen, product, handleClose }: Props) => {
           ruc: "",
           quantity: 0,
           price: 0,
-          startTime: new Date().toISOString(),
+          startTime: new Date().toISOString().split('T')[0], // Solo la fecha
         }}
         onSubmit={async (values: CreateProps, { setErrors }) => {
           const response = await createEntry({
@@ -54,7 +53,7 @@ const EntryCreate = ({ isOpen, product, handleClose }: Props) => {
                 productId,
                 ...values,
                 quantity: Number(values.quantity),
-                startTime: new Date(values.startTime).toISOString(),
+                startTime: new Date(values.startTime).toISOString(), // Se mantiene ISO pero solo con fecha
               },
             },
             update: (cache, { data }) => {
@@ -111,11 +110,10 @@ const EntryCreate = ({ isOpen, product, handleClose }: Props) => {
               <InputField
                 label="Fecha Ingreso"
                 name="startTime"
-                type="datetime-local"
-                value={values.startTime.split(".")[0]}
+                type="date" // Cambiado a type="date"
+                value={values.startTime}
                 onChange={(e) => {
-                  const isoDateTime = new Date(e.target.value).toISOString();
-                  setFieldValue("startTime", isoDateTime);
+                  setFieldValue("startTime", e.target.value);
                 }}
               />
               <Button

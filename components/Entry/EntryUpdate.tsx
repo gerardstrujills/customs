@@ -1,10 +1,9 @@
 import { useUpdateEntryMutation } from "@/gen/gql";
-import React from "react";
-import ModalWrapper from "../ModalWrapper";
+import { toErrorMap } from "@/utils/toErrorMap";
+import { Button } from "@chakra-ui/react";
 import { Form, Formik } from "formik";
 import { InputField } from "../InputField";
-import { Button } from "@chakra-ui/react";
-import { toErrorMap } from "@/utils/toErrorMap";
+import ModalWrapper from "../ModalWrapper";
 
 type Entry = {
   id: number;
@@ -41,19 +40,27 @@ type Props = {
 const EntryUpdate = ({ isOpen, entry, handleClose }: Props) => {
   const [updateEntry] = useUpdateEntryMutation();
 
+  // Convertir la fecha ISO a formato YYYY-MM-DD para el input date
+  const formatDateForInput = (isoString: string) => {
+    return isoString.split('T')[0];
+  };
+
   return (
     <ModalWrapper isOpen={isOpen} onClose={handleClose} className="ws4 p12">
       <Formik
         initialValues={{
           quantity: entry.quantity,
           price: entry.price,
-          startTime: entry.startTime,
+          startTime: formatDateForInput(entry.startTime), // Solo la fecha
         }}
         onSubmit={async (values: CreateProps, { setErrors }) => {
           const response = await updateEntry({
             variables: {
               id: entry.id,
-              input: { ...values },
+              input: { 
+                ...values,
+                startTime: new Date(values.startTime).toISOString(), // Se mantiene ISO pero solo con fecha
+              },
             },
           });
 
@@ -86,11 +93,10 @@ const EntryUpdate = ({ isOpen, entry, handleClose }: Props) => {
               <InputField
                 label="Fecha Ingreso"
                 name="startTime"
-                type="datetime-local"
-                value={values.startTime.split(".")[0]}
+                type="date" // Cambiado a type="date"
+                value={values.startTime}
                 onChange={(e) => {
-                  const isoDateTime = new Date(e.target.value).toISOString();
-                  setFieldValue("startTime", isoDateTime);
+                  setFieldValue("startTime", e.target.value);
                 }}
               />
               <Button
